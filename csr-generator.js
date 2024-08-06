@@ -12,15 +12,18 @@ const form = {
   organization_unit: 'cola',
   AN: 'colatv',
 }
+const start = 12
+const end = 20
 
 async function main () {
   const resultArray = []
   const browser = await puppeteer.launch();
 
-  getCSR(browser, '167.172.74.191', resultArray)
+  await Promise.all(array.map((mappedIndex)=>getAPIKey(browser, mappedIndex, resultArray)))
+  await getCSR(browser, '167.172.74.191', resultArray)
   // const array = Array.from({length: range}).map((_, index) => index + startIndex)
   // await Promise.all(array.map((mappedIndex)=>getAPIKey(browser, mappedIndex, resultArray)))
-  // console.log(resultArray)
+  console.log(resultArray)
   // writeToFile(resultArray)
   browser.close()
 }
@@ -29,7 +32,7 @@ async function getCSR(browser, CN, resultArray) {
   const page = await browser.newPage();
   await page.setViewport({width: 1080, height: 1024});
   await page.goto('https://csrgenerator.com/');
-  
+
   await page.type('body > div > div > div > div.columns > div > form > div:nth-child(1) > input', form.country);
   await page.type('body > div > div > div > div.columns > div > form > div:nth-child(2) > input', form.state);
   await page.type('body > div > div > div > div.columns > div > form > div:nth-child(3) > input', form.locality);
@@ -39,7 +42,7 @@ async function getCSR(browser, CN, resultArray) {
   await page.type('body > div > div > div > div.columns > div > form > div:nth-child(7) > input', form.AN);
 
   try {
-    const keySizeSelector = await page.waitForSelector('body > div > div > div > div.columns > div > form > div:nth-child(8) > label:nth-child(2) > i');
+    const keySizeSelector = await page.waitForSelector('body > div > div > div > div.columns > div > form > div:nth-child(8) > label:nth-child(3)');
     await keySizeSelector.click();
   } catch (error) {
     await page.screenshot({path: `screenshot/keySizeSelector_${CN}.png`})
@@ -57,9 +60,12 @@ async function getCSR(browser, CN, resultArray) {
   }
 
   try {
+    await page.waitForNetworkIdle()
+    await page.screenshot({path: `screenshot/generateBtn_${CN}.png`})
     const csr = await page.waitForSelector('#csr');
-    const csrContent = await csr?.evaluate(el => el.textContent)
-    console.log(csrContent)
+    const csrContent = await csr?.evaluate(el => el.value)
+    console.log('csrContent', csrContent)
+    resultArray.push(csrContent);
   } catch (error) {
     await page.screenshot({path: `screenshot/csr_${CN}.png`})
     console.log('csr')
@@ -69,17 +75,17 @@ async function getCSR(browser, CN, resultArray) {
   await page.close();
 }
 
-function writeToFile(arr) {
-  const pairFile = fs.createWriteStream(`result/pair_${startIndex}_${endIndex}.txt`);
-  pairFile.on('error', function(err) { console.log(err) });
-  arr.forEach(function(item) { pairFile.write(item.join(': ') + '\n'); });
-  pairFile.end();
+// function writeToFile(arr) {
+//   const pairFile = fs.createWriteStream(`result/pair_${startIndex}_${endIndex}.txt`);
+//   pairFile.on('error', function(err) { console.log(err) });
+//   arr.forEach(function(item) { pairFile.write(item.join(': ') + '\n'); });
+//   pairFile.end();
 
-  const keyFile = fs.createWriteStream(`result/key_${startIndex}_${endIndex}.txt`);
-  keyFile.on('error', function(err) { console.log(err) });
-  arr.forEach(function(item) { keyFile.write(item[1] + '\n'); });
-  keyFile.end();
-}
+//   const keyFile = fs.createWriteStream(`result/key_${startIndex}_${endIndex}.txt`);
+//   keyFile.on('error', function(err) { console.log(err) });
+//   arr.forEach(function(item) { keyFile.write(item[1] + '\n'); });
+//   keyFile.end();
+// }
 
 
 main()
