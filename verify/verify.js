@@ -14,6 +14,8 @@ const endIndex = startIndex + range
 async function main () {
   const resultArray = []
   const browser = await puppeteer.launch();
+  const context = browser.defaultBrowserContext();
+  await context.overridePermissions('https://app.zerossl.com/', ['clipboard-read']);
   const array = Array.from({length: range}).map((_, index) => index + startIndex)
   await Promise.all(array.map((mappedIndex)=> getHash(browser, mappedIndex, resultArray)))
   console.log(resultArray)
@@ -77,32 +79,12 @@ async function getHash(browser, index, resultArray) {
     const copyBtnSelector = await page.waitForSelector('body > div:nth-child(5) > section > div > main > div > div > section.list > ul > li:nth-child(2) > div.actions.dropdown > ul > li:nth-child(1) > a');
     await copyBtnSelector.click();
     const hash = await page.evaluate(() => navigator.clipboard.readText())
-    await page.screenshot({path: `screenshot/copyBtnSelector_${index}.png`})
-    console.log(hash)
+    resultArray.push(hash)
   } catch (error) {
     await page.screenshot({path: `screenshot/copyBtnSelector_${index}.png`})
     console.log('copyBtnSelector')
     console.log(error)
   }
-
-  // try {
-  //   const developerSelector = await page.waitForSelector('body > div:nth-child(5) > section > div > div.left > div > ul > li.developer > a');
-  //   developerSelector.click()
-  // } catch (error) {
-  //   console.log('developerSelector')
-  //   console.log(error)
-  //   await page.screenshot({path: `screenshot/developerSelector_${index}.png`})
-  // }
-
-  // try {
-  //   const apiKeySelector = await page.waitForSelector('body > div:nth-child(5) > section > div > main > div > div > section:nth-child(2) > div:nth-child(2) > div > span');
-  //   const APIKey = await  apiKeySelector?.evaluate(el => el.textContent)
-  //   resultArray.push([username.replace('<index>', index), APIKey]);
-  // } catch (error) {
-  //   console.log('apiKeySelector')
-  //   console.log(error)
-  //   await page.screenshot({path: `screenshot/apiKeySelector_${index}.png`})
-  // }
 
   await page.close();
 }

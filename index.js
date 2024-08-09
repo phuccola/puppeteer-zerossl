@@ -4,9 +4,9 @@ const Stealth = require('puppeteer-extra-plugin-stealth');
 const fs = require('fs')
 puppeteerExtra.use(Stealth());
 const password = 'Makati@2024'
-const username = 'garson6789-<index>@gmail.com'
-const startIndex = 197
-const range = 4
+const username = 'garson6782-<index>@gmail.com'
+const startIndex = 100
+const range = 10
 const endIndex = startIndex + range
 
 async function main () {
