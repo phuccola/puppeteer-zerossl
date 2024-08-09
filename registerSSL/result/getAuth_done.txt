@@ -1,0 +1,7 @@
+http://152.42.180.83/.well-known/pki-validation/DA2EF7EFD77871FD21A405A928C47DE9.txt/garson6789-23-6@gmail.com
+http://152.42.164.222/.well-known/pki-validation/551AEB52501CBD6A44A8CCECAC7B43F9.txt/garson6789-23-5@gmail.com
+http://178.128.17.136/.well-known/pki-validation/E9E4FDFEFAC170655DD1B914D35EFABD.txt/garson6789-23-4@gmail.com
+http://178.128.24.17/.well-known/pki-validation/77BC5713777C117419D97A9250436C7B.txt/garson6789-23-3@gmail.com
+http://157.245.57.244/.well-known/pki-validation/FB879B5F54B7631EFA63F26DC14C12FA.txt/garson6789-23-2@gmail.com
+http://152.42.196.59/.well-known/pki-validation/79BC2F1F7D061AAF4EF99FE27EB2A24C.txt/garson6789-23-1@gmail.com
+http://174.138.21.212/.well-known/pki-validation/555195A4663A4AF3A5784E00273D8EF5.txt/garson6789-23-0@gmail.com
